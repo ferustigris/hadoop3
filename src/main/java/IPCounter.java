@@ -25,8 +25,8 @@ public class IPCounter {
         conf.setMapOutputValueClass(IntWritable.class);
 
         //Providing the mapper and reducer class names
-        conf.setMapperClass(Map.class);
-        conf.setReducerClass(Reduce.class);
+        conf.setMapperClass(IPMapper.class);
+        conf.setReducerClass(IPReducer.class);
 
         //Setting format of input and output
         conf.setInputFormat(TextInputFormat.class);
