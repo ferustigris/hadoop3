@@ -6,15 +6,20 @@ import java.io.IOException;
 import java.util.Iterator;
 
 public class IPReducer extends MapReduceBase implements
-        org.apache.hadoop.mapred.Reducer<Text, IntWritable, Text, IntWritable> {
+        org.apache.hadoop.mapred.Reducer<Text, IntWritable, Text, Pair> {
 
-    public void reduce(Text ip, Iterator<IntWritable> values, OutputCollector<Text, IntWritable> out, Reporter reporter) throws IOException {
+    Pair p = new Pair();
+
+    public void reduce(Text ip, Iterator<IntWritable> values, OutputCollector<Text, Pair> out, Reporter reporter) throws IOException {
         int sum = 0;
+        int count = 0;
         while (values.hasNext()) {
             sum += values.next().get();
+            count++;
         }
 
         //Dumping the output
-        out.collect(ip, new IntWritable(sum));
+        p.set(sum, sum * 1.0 / count);
+        out.collect(ip, p);
     }
 }

@@ -13,8 +13,8 @@ import java.util.List;
 
 public class MapTest {
     MapDriver<LongWritable, Text, Text, IntWritable> mapDriver;
-    ReduceDriver<Text, IntWritable, Text, IntWritable> reduceDriver;
-    MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable> mapReduceDriver;
+    ReduceDriver<Text, IntWritable, Text, Pair> reduceDriver;
+    MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, Pair> mapReduceDriver;
 
     @Before
     public void setUp() {
@@ -39,18 +39,15 @@ public class MapTest {
         values.add(new IntWritable(1));
         values.add(new IntWritable(1));
         reduceDriver.withInput(new Text("6"), values);
-        reduceDriver.withOutput(new Text("6"), new IntWritable(2));
+        reduceDriver.withOutput(new Text("6"), new Pair(2, 1));
         reduceDriver.runTest();
     }
 
     @Test
     public void testMapReduce() throws IOException {
         mapReduceDriver.withInput(new LongWritable(), new Text(
-                "ip1 - - [24/Apr/2011:04:06:01 -0400] \"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\" 200 40028 \"-\" \"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\""));
-        List<IntWritable> values = new ArrayList<IntWritable>();
-        values.add(new IntWritable(1));
-        values.add(new IntWritable(1));
-        mapReduceDriver.withOutput(new Text("ip1"), new IntWritable(40028));
+                "ip1 - - [24/Apr/2011:04:06:01 -0400] \"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\" 200 40028 \"-\" \"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\"\nip1 - - [24/Apr/2011:04:06:01 -0400] \"GET /~strabal/grease/photo9/927-3.jpg HTTP/1.1\" 200 40028 \"-\" \"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)\""));
+        mapReduceDriver.withOutput(new Text("ip1"), new Pair(40028, 40028));
         mapReduceDriver.runTest();
     }
 }

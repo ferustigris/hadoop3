@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 public class IPMapper extends MapReduceBase implements
         org.apache.hadoop.mapred.Mapper<LongWritable, Text, Text, IntWritable> {
+    Text ip = new Text();
+    IntWritable count = new IntWritable();
 
     public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> out, Reporter reporter) throws IOException {
         String line = value.toString();
@@ -31,6 +33,8 @@ public class IPMapper extends MapReduceBase implements
             return;
         }
 
-        out.collect(new Text(fields.get(0)), new IntWritable(Integer.valueOf(fields.get(6))));
+        ip.set(fields.get(0));
+        count.set(Integer.valueOf(fields.get(6)));
+        out.collect(ip, count);
     }
 }
