@@ -4,6 +4,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.*;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 public class IPCounter {
     public static void main(String[] args) throws IOException {
@@ -37,7 +38,14 @@ public class IPCounter {
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
         //Running the job
-        JobClient.runJob(conf);
+        RunningJob j = JobClient.runJob(conf);
+
+        Iterator<Counters.Counter> i = j.getCounters().getGroup("browsers").iterator();
+
+        while (i.hasNext()) {
+            Counters.Counter counter = i.next();
+            System.out.println(counter.getDisplayName() + ", " + counter.getCounter());
+        }
 
     }
 }

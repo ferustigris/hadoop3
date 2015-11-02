@@ -24,13 +24,19 @@ public class IPMapper extends MapReduceBase implements
             fields.add(m.group(1));
         }
 
-        if (fields.size() < 7) {
+        if (fields.size() < 9) {
             System.out.println("Bad data!");
             System.out.println("fields = " + fields.size());
             for(String s: fields) {
                 System.out.println(s);
             }
             return;
+        }
+
+        String browserParams[] = fields.get(8).split("\\s");
+        if (browserParams.length > 0) {
+            String browser = browserParams[0];
+            reporter.getCounter("browsers", browser).increment(1    );
         }
 
         ip.set(fields.get(0));
