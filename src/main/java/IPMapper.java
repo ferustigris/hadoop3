@@ -40,7 +40,14 @@ public class IPMapper extends MapReduceBase implements
         }
 
         ip.set(fields.get(0));
-        count.set(Integer.valueOf(fields.get(6)));
-        out.collect(ip, count);
+        try {
+            count.set(Integer.valueOf(fields.get(6)));
+            out.collect(ip, count);
+        } catch (NumberFormatException e) {
+            System.out.println("Bad number:" + fields.get(6));
+            for(String s: fields) {
+                System.out.println(s);
+            }
+        }
     }
 }
